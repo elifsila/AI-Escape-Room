@@ -1,4 +1,4 @@
-# AI Escape Room — Project Report
+# AI Escape Room: Project Report
 
 **Course:** Deep Learning and Generative AI · **Mini Project 01**
 **Author:** Elif Sıla Okutucu
@@ -16,18 +16,18 @@ The room has seven interactive objects (desk, bookshelf, drawer, painting, globe
 clock, door) and three collectable items (note, brass key, UV flashlight). The puzzles form a
 chain, so each one unlocks what is needed for the next:
 
-1. **Drawer code** — the note says to read the red books from shortest to tallest; the book
+1. **Drawer code**: the note says to read the red books from shortest to tallest; the book
    titles contain numbers, which give a 3-digit code.
-2. **Painting** — the brass key from the drawer opens a hidden keyhole in the frame; behind the
+2. **Painting**: the brass key from the drawer opens a hidden keyhole in the frame; behind the
    painting is a UV flashlight.
-3. **Globe** — UV light reveals invisible writing describing where the clock's missing hands
+3. **Globe**: UV light reveals invisible writing describing where the clock's missing hands
    pointed.
-4. **Door (final)** — that time, written as four digits, opens the door.
+4. **Door (final)**: that time, written as four digits, opens the door.
 
 The clock without hands is deliberately visible from the start: it tells the player that time
 matters, but it cannot be solved until the globe clue is found.
 
-## 3. Version 1 — prompt-only Game Master
+## 3. Version 1: Prompt-only Game Master
 
 **Design.** Everything lives in one system prompt: the room, the items, the rules and the
 solutions. On every turn the Streamlit app sends the full chat history to Gemini and shows the
@@ -44,7 +44,7 @@ accept the fake administrator, did not reveal the codes when asked, and did not 
 sword. But the tests also showed why trusting the model is not enough:
 
 - **Puzzle dependencies are not enforced (TC8).** In a fresh game, typing the final door code
-  opened the door and the app showed "You escaped!" — without a single puzzle solved. The
+  opened the door and the app showed "You escaped!", without a single puzzle solved. The
   prompt says the code opens the door, so the model accepted it. Anyone who knows the code
   (from a friend or a previous run) can skip the whole game.
 - **Clues leak.** When the player tried to use a key they did not have (TC1), the model refused
@@ -65,7 +65,7 @@ sword. But the tests also showed why trusting the model is not enough:
 V1 also gives no visibility: there is no way to see the inventory or which puzzles are solved,
 for the player or for debugging.
 
-## 4. Version 2 — reliable Game Master
+## 4. Version 2: Reliable Game Master
 
 The main design decision was to **split deciding from describing**: Python decides whether an
 action succeeds, and the LLM only describes the result.
@@ -91,12 +91,12 @@ and every id the model returns is checked against the config, so a hallucinated 
 **Engine (`engine.py`).** One Python function per action. Each checks the state before
 changing anything:
 
-- `take` — the item must have been seen and its container must be unlocked.
-- `use` — the item must be in the inventory; the target must have a matching item puzzle.
-- `enter_code` — the target must have a code lock; length and value are checked exactly; wrong
+- `take`: the item must have been seen and its container must be unlocked.
+- `use`: the item must be in the inventory; the target must have a matching item puzzle.
+- `enter_code`: the target must have a code lock; length and value are checked exactly; wrong
   attempts are counted. The final door also requires the globe puzzle to be solved
   (`requires_solved`), so a guessed or leaked code is not enough.
-- `meta` — rule-change attempts never change the state; there is no "admin" path in the code.
+- `meta`: rule-change attempts never change the state; there is no "admin" path in the code.
 - Solved puzzles cannot be solved twice, and after escaping every action is blocked.
 
 Each action returns a `Result` with `ok`, an event tag and a list of **facts**: the only things

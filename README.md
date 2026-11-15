@@ -1,4 +1,4 @@
-# AI Escape Room — The Silent Library
+# AI Escape Room: The Silent Library
 
 A text-based escape room where a Large Language Model (Google Gemini) acts as the Game Master.
 You wake up in a locked library at night and have to examine objects, collect items and solve
@@ -6,7 +6,7 @@ puzzles to escape.
 
 The project is built in two versions:
 
-| | Version 1 — Interactive | Version 2 — Reliable |
+| | Version 1: Interactive | Version 2: Reliable |
 |---|---|---|
 | Who decides if an action works? | The LLM | Python game engine |
 | Where is the game state? | Only in the chat history | Structured dict (JSON-serialisable) |
@@ -23,8 +23,8 @@ deterministic Python code.
 
 ## The game
 
-**Room:** a private library with 7 interactive objects — desk, bookshelf, drawer, painting,
-globe, grandfather clock, door — and 3 collectable items — note, brass key, UV flashlight.
+**Room:** a private library with 7 interactive objects (desk, bookshelf, drawer, painting,
+globe, grandfather clock, door) and 3 collectable items (note, brass key, UV flashlight).
 
 **Puzzle chain**
 
@@ -73,12 +73,12 @@ flowchart LR
 
 Turn flow: **parse → validate & update state → narrate → guard**.
 
-- `v2/parser.py` — regex/alias parser handles normal commands without an API call. Only unclear
+- `v2/parser.py`: regex/alias parser handles normal commands without an API call. Only unclear
   messages go to Gemini in JSON mode; its output is sanitised against known ids.
-- `v2/engine.py` — every action (`examine`, `take`, `use`, `enter_code`, `open`, `inventory`,
+- `v2/engine.py`: every action (`examine`, `take`, `use`, `enter_code`, `open`, `inventory`,
   `hint`, `meta`) is a Python function that checks the state and returns a `Result` with facts.
-- `v2/state.py` — the game state dict.
-- `v2/narrator.py` — Gemini turns facts into prose. It never sees the solutions. A guard falls
+- `v2/state.py`: the game state dict.
+- `v2/narrator.py`: Gemini turns facts into prose. It never sees the solutions. A guard falls
   back to the plain facts if the text contains a secret code or claims a success that did not
   happen.
 
