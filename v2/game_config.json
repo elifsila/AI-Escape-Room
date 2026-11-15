@@ -1,0 +1,198 @@
+{
+  "title": "The Silent Library",
+  "final_puzzle": "door_code",
+  "intro": "You wake up in a worn leather armchair. Candles flicker. Rows of old books surround you — you are in **The Silent Library**, and the only door is locked.\n\nExplore the room, find clues and escape. Type what you want to do, e.g. *\"examine the desk\"*, *\"take the note\"*, *\"enter 123 on the drawer\"*, *\"use key on painting\"*. Type **hint** if you are stuck.",
+  "room_description": "A dim private library at night. You can see an oak desk with a drawer, a tall bookshelf, a portrait painting, an antique globe, a grandfather clock and a heavy oak door with a keypad.",
+  "objects": {
+    "desk": {
+      "name": "oak desk",
+      "aliases": [
+        "desk",
+        "writing desk",
+        "table"
+      ],
+      "description": "A heavy oak writing desk covered in dust. A handwritten note lies on top. The desk has a single drawer.",
+      "items": [
+        "note"
+      ]
+    },
+    "bookshelf": {
+      "name": "bookshelf",
+      "aliases": [
+        "bookshelf",
+        "bookcase",
+        "shelf",
+        "shelves",
+        "books",
+        "red books",
+        "red book"
+      ],
+      "description": "Floor-to-ceiling shelves. Three red books stand out: 'Seven Silent Sisters' (medium height), 'One Lonely Lighthouse' (the shortest) and 'Four Winter Roads' (the tallest)."
+    },
+    "drawer": {
+      "name": "desk drawer",
+      "aliases": [
+        "drawer",
+        "desk drawer",
+        "combination lock",
+        "lock"
+      ],
+      "description_locked": "The drawer is locked with a 3-digit combination lock.",
+      "description_open": "The drawer is open.",
+      "items": [
+        "brass_key"
+      ],
+      "lock": {
+        "type": "code",
+        "puzzle": "drawer_code"
+      }
+    },
+    "painting": {
+      "name": "painting",
+      "aliases": [
+        "painting",
+        "portrait",
+        "picture",
+        "frame",
+        "keyhole",
+        "madame vogel",
+        "elsa vogel"
+      ],
+      "description_locked": "A portrait of the late librarian, Madame Elsa Vogel. Looking closely, you notice a tiny keyhole hidden in the gilded frame.",
+      "description_open": "The painting has swung open on a hinge, revealing a small niche in the wall.",
+      "items": [
+        "uv_flashlight"
+      ],
+      "lock": {
+        "type": "item",
+        "puzzle": "painting_key"
+      }
+    },
+    "globe": {
+      "name": "globe",
+      "aliases": [
+        "globe",
+        "world globe",
+        "antique globe"
+      ],
+      "description": "An antique globe. There are faint, strange smudges on the oceans, as if someone wrote on it with invisible ink.",
+      "description_revealed": "Under the UV light, glowing words appear on the ocean: 'When I left, the little hand pointed to nine and the big hand to eight.'",
+      "lock": {
+        "type": "item",
+        "puzzle": "globe_message"
+      }
+    },
+    "clock": {
+      "name": "grandfather clock",
+      "aliases": [
+        "clock",
+        "grandfather clock",
+        "pendulum"
+      ],
+      "description": "A tall grandfather clock. Its hands have been removed. Engraved below the face: 'Time is a door.'"
+    },
+    "door": {
+      "name": "door",
+      "aliases": [
+        "door",
+        "exit",
+        "oak door",
+        "keypad"
+      ],
+      "description_locked": "A heavy oak door. It is locked by a 4-digit keypad.",
+      "description_open": "The door stands open. Fresh night air flows in.",
+      "lock": {
+        "type": "code",
+        "puzzle": "door_code"
+      }
+    }
+  },
+  "items": {
+    "note": {
+      "name": "handwritten note",
+      "aliases": [
+        "note",
+        "paper",
+        "letter",
+        "handwritten note"
+      ],
+      "location": "desk",
+      "description": "The note reads: 'My dear reader — the red books keep my secret. Read them from the shortest to the tallest.'"
+    },
+    "brass_key": {
+      "name": "brass key",
+      "aliases": [
+        "brass key",
+        "key",
+        "small key"
+      ],
+      "location": "drawer",
+      "description": "A small, ornate brass key. It looks too small for the door."
+    },
+    "uv_flashlight": {
+      "name": "UV flashlight",
+      "aliases": [
+        "uv flashlight",
+        "flashlight",
+        "uv light",
+        "torch",
+        "uv torch",
+        "black light",
+        "light"
+      ],
+      "location": "painting",
+      "description": "A small flashlight that emits violet ultraviolet light."
+    }
+  },
+  "puzzles": {
+    "drawer_code": {
+      "description": "Find the 3-digit drawer code from the red books and the note.",
+      "target": "drawer",
+      "type": "code",
+      "solution": "174",
+      "success": "The combination lock clicks. The drawer slides open. Inside lies a small brass key."
+    },
+    "painting_key": {
+      "description": "Unlock the hidden keyhole in the painting frame.",
+      "target": "painting",
+      "type": "item",
+      "requires": "brass_key",
+      "success": "The brass key turns with a soft click. The painting swings open, revealing a niche with a UV flashlight inside."
+    },
+    "globe_message": {
+      "description": "Reveal the invisible writing on the globe.",
+      "target": "globe",
+      "type": "item",
+      "requires": "uv_flashlight",
+      "success": "Under the UV light, glowing words appear on the ocean: 'When I left, the little hand pointed to nine and the big hand to eight.'"
+    },
+    "door_code": {
+      "description": "Enter the 4-digit door code.",
+      "target": "door",
+      "type": "code",
+      "solution": "0940",
+      "success": "The keypad beeps twice and the lock releases. The heavy door swings open — you step out into the cool night air. You escaped!",
+      "requires_solved": [
+        "globe_message"
+      ]
+    }
+  },
+  "hints": [
+    {
+      "until": "drawer_code",
+      "text": "The note on the desk talks about red books. Look at the bookshelf — the titles and heights matter."
+    },
+    {
+      "until": "painting_key",
+      "text": "Keys open keyholes. Have you looked closely at the painting?"
+    },
+    {
+      "until": "globe_message",
+      "text": "Some writing can only be seen in a special kind of light. Which object looks like it was written on?"
+    },
+    {
+      "until": "door_code",
+      "text": "The clock has no hands, but the globe told you where they were. Turn that time into four digits."
+    }
+  ]
+}
