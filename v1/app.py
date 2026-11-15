@@ -12,7 +12,7 @@ from google.genai import types
 from prompts import ESCAPE_TOKEN, INTRO, SYSTEM_PROMPT
 
 load_dotenv()
-MODEL = os.getenv("GEMINI_MODEL", "gemini-flash-latest")
+MODEL = os.getenv("GEMINI_MODEL", "gemini-3.6-flash")
 
 st.set_page_config(page_title="AI Escape Room · V1", page_icon="📚")
 
@@ -23,7 +23,8 @@ def get_client():
     if not api_key:
         st.error("GEMINI_API_KEY is missing. Copy .env.example to .env and add your key.")
         st.stop()
-    return genai.Client(api_key=api_key)
+    # 60 s timeout so the UI shows an error instead of spinning forever
+    return genai.Client(api_key=api_key, http_options=types.HttpOptions(timeout=60_000))
 
 
 def reset_game():
