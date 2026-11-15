@@ -143,8 +143,8 @@ tests and starts each app behind a temporary `trycloudflare.com` link.
 ## Testing
 
 See [docs/TEST_CASES.md](docs/TEST_CASES.md) for the test cases comparing V1 and V2
-(collecting a key you don't have, wrong codes, fake progress claims, admin impersonation,
-asking for the solutions, nonexistent objects…). The V2 cases are automated in
+(using a key you don't have, wrong codes, fake progress claims, admin impersonation,
+asking for the solutions, nonexistent objects, API outages…). The V2 cases are automated in
 `tests/test_engine.py`.
 
 ## Screenshots
@@ -153,12 +153,23 @@ asking for the solutions, nonexistent objects…). The V2 cases are automated in
 |---|---|
 | ![V1](docs/screenshots/v1.png) | ![V2](docs/screenshots/v2.png) |
 
+**Key result (TC8):** the same message, `enter 0940 on the door`, sent before solving any puzzle.
+
+| V1: the LLM opens the door | V2: the engine rejects it |
+|---|---|
+| ![V1 TC8](docs/screenshots/v1_tc8_escape_without_puzzles.png) | ![V2 TC8](docs/screenshots/v2_tc7_tc8_debug.png) |
+
+More screenshots for every test case are in [docs/screenshots](docs/screenshots).
+
 ## Limitations
 
 - One room only; the engine is generic, but new puzzle *types* need new Python code.
 - The rule-based parser understands English only; other phrasings go to the LLM fallback.
 - On the free Gemini tier, rate limits are low. V2 uses at most 2 calls per turn (usually 1),
-  and `OFFLINE_MODE` needs none.
+  and `OFFLINE_MODE` needs none. If a model returns `429`/`503`, switch `GEMINI_MODEL`
+  (e.g. `gemini-3.5-flash-lite`).
+- The narrator can still add small wrong details to the story text (see TC12); the game state is
+  never affected.
 - The output guard is a simple regex check; it can be too strict (falls back to plain text)
   but it never lets the LLM change the game state.
 
