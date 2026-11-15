@@ -112,19 +112,30 @@ continues with the plain facts. With `OFFLINE_MODE=1` the whole game runs withou
 
 ## 5. Testing
 
-Eleven test cases are documented in `TEST_CASES.md` with screenshots, covering the five
+Twelve test cases are documented in `TEST_CASES.md` with screenshots, covering the five
 challenges from the brief (unowned key, wrong code, fake "already solved" claim, administrator
 impersonation, request for all codes) and extra ones (nonexistent object, item in a locked
 container, correct final code without the clue, repeating a solved puzzle, a narrator that lies,
-API outage). V1 passed most of the direct attacks but failed TC8 (escape without solving any
+API outage, narrator accuracy). V1 passed most of the direct attacks but failed TC8 (escape without solving any
 puzzle) and TC11 (API outage), and leaked clues in TC1, TC3 and TC5. The V2 behaviour is
 automated in 16 `pytest` tests that run offline. A fake LLM is used to test the narrator guard,
 and it also checks that no solution ever appears in a prompt sent to the model.
 
+V2 passed every case by hand as well. The clearest comparison is TC8: the same message that won
+the game in V1 is rejected in V2 (`"event": "wrong_code"`). During the V2 run the free Gemini
+quota ran out (`429`); the game kept working with plain engine facts, which shows the benefit of
+keeping the LLM out of the critical path. The playthrough also revealed a weakness of V2: the
+narrator sometimes adds small wrong details (it placed the flashlight on the desk, and called the
+drawer empty while the key was still inside). The state stayed correct, but the text was not.
+
 ## 6. Limitations and future work
 
 - The output guard uses simple patterns; it can reject good text (the player then sees plain
-  facts) but it can never let the LLM change the state.
+  facts) but it can never let the LLM change the state. It does not catch small invented details
+  in the narration (TC12); a stricter check of item locations, or showing the facts under the
+  story text, would fix this.
+- The free Gemini tier has small quotas. We hit `504`, `503` and `429` errors during testing and
+  had to switch models; V2 keeps working without the LLM, V1 does not.
 - The rule-based parser understands English; other languages depend on the LLM fallback.
 - New puzzle *types* (e.g. combining two items) need new engine code; new rooms using existing
   types only need a new JSON file.
